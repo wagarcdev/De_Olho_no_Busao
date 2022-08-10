@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.DeOlhoNoBusao.Starting" parent="Theme.SplashScreen">
+        <item name="android:windowSplashScreenBackground">#FFFFFF</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_deolho_logo_splash</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.DeOlhoNoBusao</item>
+    </style>
+</resources>

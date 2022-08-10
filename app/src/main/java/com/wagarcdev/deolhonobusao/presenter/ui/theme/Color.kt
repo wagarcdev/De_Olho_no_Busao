@@ -1,4 +1,4 @@
-package com.wagarcdev.deolhonobusao.ui.theme
+package com.wagarcdev.deolhonobusao.presenter.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
