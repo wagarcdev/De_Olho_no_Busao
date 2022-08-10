@@ -43,7 +43,7 @@ class MapViewModel @Inject constructor(
             launch { repository.postRequestAuthentication()
             }.join()
 
-            repository.getBusPositions().onEach { resource ->
+            repository.getBusPositions().collect() { resource ->
                 when(resource) {
                     is Resource.Success -> {
                         _state.value = _state.value.copy(
