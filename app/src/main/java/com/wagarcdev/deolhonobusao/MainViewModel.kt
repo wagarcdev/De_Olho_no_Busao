@@ -2,6 +2,7 @@ package com.wagarcdev.deolhonobusao
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +14,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor (
 //    private val repository: AppRepository
 ): ViewModel() {
+
+    lateinit var navHostController: NavHostController
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()

@@ -1,4 +1,4 @@
-package com.wagarcdev.deolhonobusao.presenter.ui.theme
+package com.wagarcdev.deolhonobusao.presentention.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
