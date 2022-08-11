@@ -117,7 +117,7 @@ dependencies {
 
     // Compose dependencies
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
-    implementation "com.google.maps.android:maps-compose:1.0.0"
+    implementation "com.google.maps.android:maps-compose:2.5.3"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
     
     //Room
@@ -133,6 +133,7 @@ dependencies {
 
     // Google Maps
     implementation "com.google.android.gms:play-services-maps:18.0.2"
+
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'

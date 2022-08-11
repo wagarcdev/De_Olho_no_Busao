@@ -13,10 +13,7 @@ import com.wagarcdev.deolhonobusao.presentention.screens.screen_map.MapState
 import com.wagarcdev.deolhonobusao.presentention.screens.screen_map.MapStyle
 import com.wagarcdev.deolhonobusao.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,11 +28,12 @@ class MapViewModel @Inject constructor(
     private val _busPositions = mutableStateOf<BusPositions?>(null)
     val busPositions: State<BusPositions?> = _busPositions
 
-    private val _busPosIdList = mutableListOf<Long>()
-    val busPosIdList: MutableList<Long> = _busPosIdList
 
-    private var _busMarkersPos = mutableListOf<BusMarkerPosition>()
-    val busMarkersPos: MutableList<BusMarkerPosition> = _busMarkersPos
+    private var _busMarkersPositionsList = MutableStateFlow<List<BusMarkerPosition>>(emptyList())
+    val busMarkersPositionsList = _busMarkersPositionsList.asStateFlow()
+
+//    private var _busMarkersPos = mutableListOf<BusMarkerPosition>()
+//    val busMarkersPos: MutableList<BusMarkerPosition> = _busMarkersPos
 
     init {
         viewModelScope.launch {
@@ -61,9 +59,7 @@ class MapViewModel @Inject constructor(
                                         lat = vehicle.py,
                                         lng = vehicle.px
                                     )
-                                )?.let {
-                                    _busPosIdList.add( it )
-                                }
+                                )
                             }
 
                         }
@@ -90,7 +86,8 @@ class MapViewModel @Inject constructor(
             }
 
             repository.getBusMarkerPositions().distinctUntilChanged().collect { list ->
-                _busMarkersPos = list as MutableList<BusMarkerPosition>
+//                _busMarkersPos = list as MutableList<BusMarkerPosition>
+                _busMarkersPositionsList.value = list
 
             }
         }
