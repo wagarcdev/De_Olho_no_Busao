@@ -4,13 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "bus_stops_tbl")
-data class BusStopEntity(
+data class BusStop(
 
     @PrimaryKey
-    val cp: Int,
+    val id: Int,
 
-    val np: String,
-    val ed: String,
-    val py: Double,
-    val px: Double,
+    val name: String,
+    val address: String,
+    val lat: Double,
+    val lng: Double
 )

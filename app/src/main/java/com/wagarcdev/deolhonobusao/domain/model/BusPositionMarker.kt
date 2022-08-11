@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "bus_position_tbl")
-data class BusMarkerPosition( // Veículos
+data class BusPositionMarker( // Veículos
     @PrimaryKey
     var prefix: Int, //Prefixo do veículo
 

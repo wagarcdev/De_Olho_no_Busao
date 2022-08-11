@@ -2,7 +2,7 @@ package com.wagarcdev.deolhonobusao.presentention.screens.screen_map
 
 import com.google.maps.android.compose.MapProperties
 import com.wagarcdev.deolhonobusao.data.remote.responses.BusPositions
-import com.wagarcdev.deolhonobusao.domain.model.BusStop
+import com.wagarcdev.deolhonobusao.data.remote.responses.BusStop
 
 data class MapState(
     val properties: MapProperties = MapProperties(),

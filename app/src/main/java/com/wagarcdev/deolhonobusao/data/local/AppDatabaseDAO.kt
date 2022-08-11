@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import com.wagarcdev.deolhonobusao.data.remote.responses.BusStopEntity
-import com.wagarcdev.deolhonobusao.domain.model.BusMarkerPosition
+import com.wagarcdev.deolhonobusao.data.remote.responses.BusStop
+import com.wagarcdev.deolhonobusao.domain.model.BusPositionMarker
 import kotlinx.coroutines.flow.Flow
 
 
@@ -13,19 +13,22 @@ import kotlinx.coroutines.flow.Flow
 interface AppDatabaseDAO {
 
     @Query("SELECT * from bus_stops_tbl")
-    fun getBusStops(): Flow<List<BusStopEntity>>
+    fun getBusStops(): Flow<List<BusStop>>
 
     @Query("SELECT * from bus_position_tbl")
-    fun getBusPositions(): Flow<List<BusMarkerPosition>>
+    fun getBusPositions(): Flow<List<BusPositionMarker>>
 
-    @Query("SELECT * from bus_stops_tbl where cp=:id")
-    suspend fun findBusStopById(id: Int): BusStopEntity
+    @Query("DELETE from bus_position_tbl")
+    fun deleteAllBusPositions()
 
-    @Query("SELECT * from bus_stops_tbl where np=:name")
-    suspend fun findBusStopByNames(name: String): BusStopEntity
+    @Query("SELECT * from bus_stops_tbl where id=:id")
+    suspend fun findBusStopById(id: Int): BusStop
+
+    @Query("SELECT * from bus_stops_tbl where name=:name")
+    suspend fun findBusStopByNames(name: String): BusStop
 
     @Insert(onConflict = REPLACE)
-    suspend fun addBusPos(busPosition: BusMarkerPosition): Long
+    suspend fun addBusPos(busPosition: BusPositionMarker): Long
 
 
 

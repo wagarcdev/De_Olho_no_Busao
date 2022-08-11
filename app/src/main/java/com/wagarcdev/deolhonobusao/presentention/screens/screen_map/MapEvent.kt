@@ -1,8 +1,7 @@
 package com.wagarcdev.deolhonobusao.presentention.screens.screen_map
 
 import com.google.android.gms.maps.model.LatLng
-import com.wagarcdev.deolhonobusao.data.remote.responses.BusStopEntity
-import com.wagarcdev.deolhonobusao.domain.model.BusStop
+import com.wagarcdev.deolhonobusao.data.remote.responses.BusStop
 
 sealed class MapEvent {
     object ToggleNoLabelsMap: MapEvent()
