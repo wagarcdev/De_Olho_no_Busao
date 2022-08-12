@@ -12,7 +12,7 @@ import com.wagarcdev.deolhonobusao.domain.model.BusPositionMarker
         LineEntity::class,
         BusPositionMarker::class
     ],
-    version = 6
+    version = 8
 )
 
 abstract class AppDatabase: RoomDatabase() {

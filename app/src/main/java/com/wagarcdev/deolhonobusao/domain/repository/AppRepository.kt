@@ -12,7 +12,7 @@ interface AppRepository {
 
     suspend fun findBusStopByNames(string: String): BusStop
 
-    suspend fun getBusStops(): List<BusStop>
+    suspend fun getBusStops(): Flow<Resource<List<BusStop>>>
 
     suspend fun getBusPositions(): Flow<Resource<BusPositions>>
 
@@ -23,4 +23,6 @@ interface AppRepository {
     suspend fun postRequestAuthentication(): Resource<Boolean>
 
     suspend fun addBusPosition(busPosition: BusPositionMarker): Long
+
+    suspend fun addBusStopPosition(busStop: BusStop): Long
 }

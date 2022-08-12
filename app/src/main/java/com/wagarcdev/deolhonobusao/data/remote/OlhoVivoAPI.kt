@@ -17,8 +17,18 @@ interface OlhoVivoAPI {
     suspend fun getBusPositions(): BusPositions
 
 
+
     @GET(BUS_STOPS)
-    suspend fun getAllBusStops(): List<BusStop>
+    suspend fun getAllBusStops(): MutableList<BusStop>
+
+//    @GET(BUS_STOPS)
+//    suspend fun getAllBusStops(
+//        @Query("cp") id: Int,
+//        @Query("np") name: String,
+//        @Query("ed") address: String,
+//        @Query("py") lat: Double,
+//        @Query("px") lng: Double
+//    ): List<BusStop>
 
 
 }

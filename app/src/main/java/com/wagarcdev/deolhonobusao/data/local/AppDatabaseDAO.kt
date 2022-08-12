@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AppDatabaseDAO {
 
-    @Query("SELECT * from bus_stops_tbl")
+    @Query("SELECT * from bus_stop_tbl")
     fun getBusStops(): Flow<List<BusStop>>
 
     @Query("SELECT * from bus_position_tbl")
@@ -21,16 +21,17 @@ interface AppDatabaseDAO {
     @Query("DELETE from bus_position_tbl")
     fun deleteAllBusPositions()
 
-    @Query("SELECT * from bus_stops_tbl where id=:id")
+    @Query("SELECT * from bus_stop_tbl where id=:id")
     suspend fun findBusStopById(id: Int): BusStop
 
-    @Query("SELECT * from bus_stops_tbl where name=:name")
+    @Query("SELECT * from bus_stop_tbl where name=:name")
     suspend fun findBusStopByNames(name: String): BusStop
 
     @Insert(onConflict = REPLACE)
     suspend fun addBusPos(busPosition: BusPositionMarker): Long
 
-
+    @Insert(onConflict = REPLACE)
+    suspend fun addBusStopPos(busStop: BusStop): Long
 
 
 }

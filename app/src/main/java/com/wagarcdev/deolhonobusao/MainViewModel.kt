@@ -26,5 +26,4 @@ class MainViewModel @Inject constructor (
             _isLoading.value = false
         }
     }
-
 }

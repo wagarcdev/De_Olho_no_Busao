@@ -1,5 +1,6 @@
 package com.wagarcdev.deolhonobusao.data
 
+import android.util.Log
 import com.wagarcdev.deolhonobusao.data.local.AppDatabaseDAO
 import com.wagarcdev.deolhonobusao.data.remote.OlhoVivoAPI
 import com.wagarcdev.deolhonobusao.data.remote.responses.BusPositions
@@ -27,8 +28,35 @@ class AppRepositoryImplementation(
         return dao.findBusStopByNames(string)
     }
 
-    override suspend fun getBusStops(): List<BusStop>  {
-        return  api.getAllBusStops()
+    override suspend fun getBusStops()
+     : Flow<Resource<List<BusStop>>> = flow {
+        emit(Resource.Loading())
+
+        try {
+            val busStopPos = api.getAllBusStops()
+
+            busStopPos.forEach { busStop ->
+                Log.i("GETBUSSTOPS", "LIST BUS STOPS:  ")
+                Log.i("GETBUSSTOPS", " id = ${busStop.id} ")
+                Log.i("GETBUSSTOPS", " name = ${busStop.name} ")
+                Log.i("GETBUSSTOPS", " address = ${busStop.address} ")
+                Log.i("GETBUSSTOPS", " lat = ${busStop.lat} ")
+                Log.i("GETBUSSTOPS", " long = ${busStop.lng} ")
+            }
+            Log.i("GETBUSSTOPS", " TOTAL BUSTOPS FETCHED = ${busStopPos.size} ")
+            emit(Resource.Success(busStopPos))
+        } catch (e: HttpException) {
+            emit(Resource.Error(
+                message = "Error : $e",
+                data = null
+            ))
+        } catch (e: IOException) {
+            emit(Resource.Error(
+                message = "Error : $e | Unable to reach Server, check you internet connection",
+                data = null
+            ))
+        }
+
     }
 
     override suspend fun getBusPositions()
@@ -71,4 +99,10 @@ class AppRepositoryImplementation(
     override suspend fun addBusPosition(busPosition: BusPositionMarker): Long {
         return dao.addBusPos(busPosition)
     }
+
+    override suspend fun addBusStopPosition(busStop: BusStop): Long {
+        return dao.addBusStopPos(busStop)
+    }
+
+
 }

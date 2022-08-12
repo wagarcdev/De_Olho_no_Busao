@@ -2,7 +2,9 @@
 <resources>
 
     <style name="Theme.DeOlhoNoBusao" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:statusBarColor">@color/black_with_transparency_25</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:colorPrimary">@color/black</item>
 
     </style>
 </resources>

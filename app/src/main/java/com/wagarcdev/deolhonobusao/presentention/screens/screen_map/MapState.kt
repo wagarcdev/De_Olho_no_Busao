@@ -7,7 +7,7 @@ import com.wagarcdev.deolhonobusao.data.remote.responses.BusStop
 data class MapState(
     val properties: MapProperties = MapProperties(),
     val isNoLabelsMap: Boolean = false,
-    val busStops: List<BusStop> = emptyList(),
+    val busStops: List<BusStop>? = emptyList(),
     val busPositions: BusPositions? = null,
     val isLoading: Boolean = false
 )

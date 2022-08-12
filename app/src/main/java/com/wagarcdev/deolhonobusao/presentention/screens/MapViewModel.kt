@@ -30,10 +30,22 @@ class MapViewModel @Inject constructor(
     private val _state = mutableStateOf<MapState>(MapState())
     val state: State<MapState> = _state
 
-    private var _busPositionMarkers = MutableStateFlow<List<BusPositionMarker>>(emptyList())
-    val busPositionMarkers = _busPositionMarkers.asStateFlow()
+//    private var _busPositionMarkers = MutableStateFlow<List<BusPositionMarker>>(emptyList())
+//    val busPositionMarkers = _busPositionMarkers.asStateFlow()
 
-    var busStopsMarkers = mutableStateOf<List<BusStop>>(listOf())
+//    var busStopsMarkers: MutableList<BusStop> = mutableListOf()
+
+    fun setMapLoadingState(state: MapState) {
+        _state.value = _state.value.copy(
+            isLoading = state.isLoading
+        )
+    }
+
+    fun setMapBusStopsState(state: MapState) {
+        _state.value = _state.value.copy(
+            busStops = state.busStops
+        )
+    }
 
 
 
@@ -45,9 +57,52 @@ class MapViewModel @Inject constructor(
 //          launch(Dispatchers.Default) { refreshBusMarkers() }
 //          launch(Dispatchers.Default) { autoUpdateMarkers(300) }
 
-            launch(Dispatchers.Default) {
-                busStopsMarkers.value = repository.getBusStops()
+            launch(Dispatchers.Default) { fetchBusStopPositions() }
+
+        }
+    }
+
+    private suspend fun fetchBusStopPositions() {
+        repository.getBusStops().collect() { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    _state.value = _state.value.copy(
+                        busStops = resource.data,
+                        isLoading = false
+                    )
+//
+//                    _state.value.busStops?.forEach { busStop ->
+//                        addBusStopPosition(
+//                            BusStop(
+//                                id = busStop.id,
+//                                address = busStop.name ,
+//                                name = busStop.address ,
+//                                lng = busStop.lat,
+//                                lat = busStop.lng
+//                            )
+//                        )
+//                    }
+
+
+                }
+
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        isLoading = false
+                    )
+
+                    /** TODO Error handling */
+
+                }
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+
+                }
+
             }
+
 
         }
     }
@@ -88,7 +143,7 @@ class MapViewModel @Inject constructor(
             fetchBusPositions()
         }
 
-        viewModelScope.launch(Dispatchers.Default) { fetchBusMarkersPos() }
+//        viewModelScope.launch(Dispatchers.Default) { fetchBusMarkersPos() }
     }
 
 
@@ -142,12 +197,14 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchBusMarkersPos() {
-        repository.getBusMarkerPositions().collect { list ->
-            _busPositionMarkers.value = list
 
-        }
-    }
+
+//    private suspend fun fetchBusMarkersPos() {
+//        repository.getBusMarkerPositions().collect { list ->
+//            _busPositionMarkers.value = list
+//
+//        }
+//    }
 
     private suspend fun addBusPosition(busPosition: BusPositionMarker): Long? {
 
@@ -159,6 +216,19 @@ class MapViewModel @Inject constructor(
 
         return busPosId
     }
+
+    private suspend fun addBusStopPosition(busStop: BusStop): Long? {
+
+        var busPosId: Long? = null
+
+        viewModelScope.launch {
+            busPosId = repository.addBusStopPosition(busStop)
+        }.join()
+
+        return busPosId
+    }
+
+
 
     fun onEvent(event: MapEvent) {
         when(event) {
