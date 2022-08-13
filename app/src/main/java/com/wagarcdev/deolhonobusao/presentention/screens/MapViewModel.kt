@@ -1,5 +1,6 @@
 package com.wagarcdev.deolhonobusao.presentention.screens
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -24,41 +25,37 @@ class MapViewModel @Inject constructor(
     private val repository: AppRepository
 ) : ViewModel() {
 
-
-    /**TODO cache BusStops in Room then retrieve BusStopsMarkers from ROOM*/
-
     private val _state = mutableStateOf<MapState>(MapState())
     val state: State<MapState> = _state
 
-//    private var _busPositionMarkers = MutableStateFlow<List<BusPositionMarker>>(emptyList())
-//    val busPositionMarkers = _busPositionMarkers.asStateFlow()
-
-//    var busStopsMarkers: MutableList<BusStop> = mutableListOf()
-
-    fun setMapLoadingState(state: MapState) {
-        _state.value = _state.value.copy(
-            isLoading = state.isLoading
-        )
-    }
-
-    fun setMapBusStopsState(state: MapState) {
-        _state.value = _state.value.copy(
-            busStops = state.busStops
-        )
-    }
-
-
+    private var _busPosMarkerList = MutableStateFlow<List<BusPositionMarker>>(emptyList())
+    val busPosMarkerList = _busPosMarkerList.asStateFlow()
 
     init {
         viewModelScope.launch {
 
-            launch { requestAuth() }.join()
+            launch(Dispatchers.IO) { requestAuth() }.join()
 
 //          launch(Dispatchers.Default) { refreshBusMarkers() }
 //          launch(Dispatchers.Default) { autoUpdateMarkers(300) }
 
-            launch(Dispatchers.Default) { fetchBusStopPositions() }
+            launch(Dispatchers.IO) { fetchBusStopPositions() }
 
+            launch(Dispatchers.IO) { fetchBusPositions() }
+
+            launch(Dispatchers.Default) { refreshBusMarkers() }
+
+
+        }
+    }
+
+    private suspend fun getBusMarkers() {
+        repository.getBusMarkerPositions().distinctUntilChanged().collect { busMarkerPos ->
+            if (busMarkerPos.isEmpty()) {
+                Log.d("BUS LIST", "EMPTY LIST OF VEHICLES ")
+            } else {
+                _busPosMarkerList.value = busMarkerPos
+            }
         }
     }
 
@@ -70,7 +67,8 @@ class MapViewModel @Inject constructor(
                         busStops = resource.data,
                         isLoading = false
                     )
-//
+
+                    /**Saves busStops position data on Local DB*/
 //                    _state.value.busStops?.forEach { busStop ->
 //                        addBusStopPosition(
 //                            BusStop(
@@ -108,6 +106,52 @@ class MapViewModel @Inject constructor(
     }
 
 
+    private suspend fun fetchBusPositions() {
+        repository.getBusPositions().collect() { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    _state.value = _state.value.copy(
+                        isLoading = false
+                    )
+                    resource.data?.lines?.forEach { line ->
+                        line.vehicles.forEach { vehicle ->
+                            addBusPosition(
+                                BusPositionMarker(
+                                    prefix = vehicle.vehiclePrefix,
+                                    haveAcess = vehicle.haveAccess,
+                                    infoTimestap = vehicle.vehicleTimestamp,
+                                    lat = vehicle.lat,
+                                    lng = vehicle.lng
+                                )
+                            )
+                        }
+
+                    }
+                }
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        busPositions = resource.data,
+                        isLoading = false
+                    )
+                    /** TODO Error handling */
+
+                }
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        busPositions = resource.data,
+                        isLoading = true
+                    )
+
+                }
+
+            }
+
+
+        }
+    }
+
+
+
 
     private suspend fun autoUpdateMarkers(seconds: Int) {
 
@@ -143,7 +187,11 @@ class MapViewModel @Inject constructor(
             fetchBusPositions()
         }
 
-//        viewModelScope.launch(Dispatchers.Default) { fetchBusMarkersPos() }
+        viewModelScope.launch(Dispatchers.Default) {
+
+            getBusMarkers()
+
+        }
     }
 
 
@@ -151,60 +199,8 @@ class MapViewModel @Inject constructor(
         repository.postRequestAuthentication()
     }
 
-    private suspend fun fetchBusPositions() {
-        repository.getBusPositions().collect() { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        busPositions = resource.data,
-                        isLoading = false
-                    )
-
-                    _state.value.busPositions?.l?.forEach { line ->
-                        line.vs.forEach { vehicle ->
-                            addBusPosition(
-                                BusPositionMarker(
-                                    prefix = vehicle.p,
-                                    haveAcess = vehicle.a,
-                                    infoTimestap = vehicle.ta,
-                                    lat = vehicle.py,
-                                    lng = vehicle.px
-                                )
-                            )
-                        }
-
-                    }
-                }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(
-                        busPositions = resource.data,
-                        isLoading = false
-                    )
-                    /** TODO Error handling */
-
-                }
-                is Resource.Loading -> {
-                    _state.value = _state.value.copy(
-                        busPositions = resource.data,
-                        isLoading = true
-                    )
-
-                }
-
-            }
 
 
-        }
-    }
-
-
-
-//    private suspend fun fetchBusMarkersPos() {
-//        repository.getBusMarkerPositions().collect { list ->
-//            _busPositionMarkers.value = list
-//
-//        }
-//    }
 
     private suspend fun addBusPosition(busPosition: BusPositionMarker): Long? {
 

@@ -36,12 +36,12 @@ class AppRepositoryImplementation(
             val busStopPos = api.getAllBusStops()
 
             busStopPos.forEach { busStop ->
-                Log.i("GETBUSSTOPS", "LIST BUS STOPS:  ")
-                Log.i("GETBUSSTOPS", " id = ${busStop.id} ")
-                Log.i("GETBUSSTOPS", " name = ${busStop.name} ")
-                Log.i("GETBUSSTOPS", " address = ${busStop.address} ")
-                Log.i("GETBUSSTOPS", " lat = ${busStop.lat} ")
-                Log.i("GETBUSSTOPS", " long = ${busStop.lng} ")
+                Log.i("GET_BUS_STOPS", "LIST BUS STOPS:  ")
+                Log.i("GET_BUS_STOPS", " id = ${busStop.id} ")
+                Log.i("GET_BUS_STOPS", " name = ${busStop.name} ")
+                Log.i("GET_BUS_STOPS", " address = ${busStop.address} ")
+                Log.i("GET_BUS_STOPS", " lat = ${busStop.lat} ")
+                Log.i("GET_BUS_STOPS", " long = ${busStop.lng} ")
             }
             Log.i("GETBUSSTOPS", " TOTAL BUSTOPS FETCHED = ${busStopPos.size} ")
             emit(Resource.Success(busStopPos))
@@ -65,19 +65,28 @@ class AppRepositoryImplementation(
 
         try{
             val busPositions = api.getBusPositions()
-            emit(Resource.Success(busPositions))
-        } catch (e: HttpException) {
-            emit(Resource.Error(
-                message = "Error : $e",
-                data = null
-            ))
-        } catch (e: IOException) {
-            emit(Resource.Error(
-                message = "Error : $e | Unable to reach Server, check you internet connection",
-                data = null
-            ))
-        }
-    }
+//            busPositions.lines.forEach { line ->
+//                line.vehicles.forEach { vehicle ->
+//                    Log.i("GET_BUS_POSITIONS", "LIST VEHICLES:  ")
+//                    Log.i("GET_BUS_POSITIONS", "vehicle: ${vehicle.vehiclePrefix}  ")
+//                    Log.i("GET_BUS_POSITIONS", "last updated: ${vehicle.vehicleTimestamp}  ")
+//                    Log.i("GET_BUS_POSITIONS", "lat: ${vehicle.lat}  ")
+//                    Log.i("GET_BUS_POSITIONS", "long: ${vehicle.lng}  ")
+//                }
+//            }
+                    emit(Resource.Success(busPositions))
+                } catch (e: HttpException) {
+                emit(Resource.Error(
+                    message = "Error : $e",
+                    data = null
+                ))
+            } catch (e: IOException) {
+                emit(Resource.Error(
+                    message = "Error : $e | Unable to reach Server, check you internet connection",
+                    data = null
+                ))
+            }
+            }
 
     override suspend fun getBusMarkerPositions(): Flow<List<BusPositionMarker>> {
         return  dao.getBusPositions().conflate()

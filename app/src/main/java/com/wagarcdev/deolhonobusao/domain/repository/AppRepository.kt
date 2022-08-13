@@ -12,9 +12,9 @@ interface AppRepository {
 
     suspend fun findBusStopByNames(string: String): BusStop
 
-    suspend fun getBusStops(): Flow<Resource<List<BusStop>>>
+    suspend fun getBusStops(): Flow<Resource<List<BusStop>>> //*
 
-    suspend fun getBusPositions(): Flow<Resource<BusPositions>>
+    suspend fun getBusPositions(): Flow<Resource<BusPositions>> //*
 
     suspend fun getBusMarkerPositions(): Flow<List<BusPositionMarker>>
 
