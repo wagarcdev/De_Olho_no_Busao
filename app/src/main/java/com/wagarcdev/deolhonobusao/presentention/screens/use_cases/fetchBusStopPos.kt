@@ -12,27 +12,6 @@ class fetchBusStopPos @Inject constructor(
 ) {
 
     suspend operator fun invoke(): List<BusStop> {
-
-        repository.getBusStops().collect() { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    resource.data?.forEach { busStop ->
-//                        mapViewModel.setMapBusStopsState() .value.busStops.add(busStop)
-                    }
-                }
-                is Resource.Error -> {
-                    /** TODO Error handling */
-
-                }
-                is Resource.Loading -> {
-
-
-                }
-
-            }
-
-
-        }
         return emptyList() // TODO
     }
 }

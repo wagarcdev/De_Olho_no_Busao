@@ -2,19 +2,19 @@ package com.wagarcdev.deolhonobusao.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.wagarcdev.deolhonobusao.data.remote.responses.BusStop
-import com.wagarcdev.deolhonobusao.data.remote.responses.LineEntity
-import com.wagarcdev.deolhonobusao.domain.model.BusPositionMarker
+import com.wagarcdev.deolhonobusao.data.remote.responses.ResponseObj
 
 @Database(
     entities = [
+        ResponseObj::class,
         BusStop::class,
-        LineEntity::class,
-        BusPositionMarker::class
     ],
-    version = 8
+    version = 11
 )
 
+@TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract val dao: AppDatabaseDAO

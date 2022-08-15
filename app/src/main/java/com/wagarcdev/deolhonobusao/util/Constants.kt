@@ -14,5 +14,7 @@ object Constants {
 
     const val BUS_STOPS = "Parada/Buscar?termosBusca=$search"
 
+    const val BUS_LINES = "Linha/Buscar?termosBusca="
+
 
 }
