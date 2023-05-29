@@ -6,6 +6,10 @@
 
 De Olho no Busão! é um aplicativo para obtenção de informações sobre o transporte público da cidade de São Paulo. Ele utiliza a API "Olho Vivo" da SPTrans para fornecer dados em tempo real sobre a frota de ônibus da cidade. Com este aplicativo, você pode buscar informações sobre ônibus por linha e acompanhar sua localização em tempo real.
 
+## ℹ️ API "Olho Vivo"
+
+O aplicativo De Olho no Busão! utiliza a API "Olho Vivo" da SPTrans para obter informações em tempo real sobre a frota de ônibus da cidade de São Paulo. A documentação oficial da API pode ser encontrada [aqui](https://www.sptrans.com.br/desenvolvedores/api-do-olho-vivo-guia-de-referencia/). Certifique-se de seguir as diretrizes e restrições definidas pela SPTrans ao utilizar a API.
+
 ## 🛠️ Tecnologias Utilizadas
 
 - 🏗️ MVVM (Model-View-ViewModel)
